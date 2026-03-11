@@ -2,30 +2,34 @@ local vim = vim
 local Plug = vim.fn['plug#']
 
 -- Vim APIs Helpers
+local globalVar = vim.g
+local callFunc = vim.call
+local execCmd = vim.cmd
 local userCmd = vim.api.nvim_create_user_command
 
 -- Plugins
-vim.call('plug#begin')
+callFunc('plug#begin')
 Plug('saghen/blink.cmp', { ['tag'] = 'v1.*' })
 Plug('nvim-lualine/lualine.nvim')
 Plug('nvim-neo-tree/neo-tree.nvim')
 Plug('romgrk/barbar.nvim')
+Plug('rebelot/kanagawa.nvim')
 Plug('nvim-tree/nvim-web-devicons')
 Plug('MunifTanjim/nui.nvim')
 Plug('nvim-lua/plenary.nvim')
 Plug('rafamadriz/friendly-snippets')
-vim.call('plug#end')
+callFunc('plug#end')
 
 -- Alias Commands
 userCmd('ReloadConfig', 'source $MYVIMRC', {})
 userCmd('Q', 'quitall', {})
 
 -- Neovide-related Configuration
-if vim.g.neovide then
-	vim.g.neovide_opacity = 0.8
-	vim.g.neovide_normal_opacity = 1
-	vim.g.neovide_refresh_rate = 60
-	vim.g.neovide_theme = 'dark'
+if globalVar.neovide then
+	globalVar.neovide_opacity = 0.8
+	globalVar.neovide_normal_opacity = 1
+	globalVar.neovide_refresh_rate = 60
+	globalVar.neovide_theme = 'dark'
 end
 
 -- Load Plugins
@@ -55,4 +59,8 @@ require('blink.cmp').setup({
     implementation = "prefer_rust_with_warning"
   },
 })
+
+-- Apply colorscheme
+execCmd("colorscheme kanagawa")
+
 
