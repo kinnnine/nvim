@@ -8,6 +8,9 @@ cmd<br/>
 powershell<br/>
 `git clone https://github.com/kinnnine/nvim $env:LOCALAPPDATA\nvim`
 
+post-install<br/>
+execute `:PlugUpdate` inside nvim and restart.
+
 ## Requirements
 
 - [Neovim](https://neovim.io/doc/install/) 0.11.6+
