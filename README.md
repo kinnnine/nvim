@@ -10,12 +10,12 @@ powershell<br/>
 
 ## Requirements
 
-- Neovim 0.11.6+
-- Neovide 0.15.2+
+- [Neovim](https://neovim.io/doc/install/) 0.11.6+
+- [Neovide](https://neovide.dev/installation.html) 0.15.2+
 - fzf
 - fd
 - ripgrep
-- nerd-font 3.4.0+
+- [nerd-font (CommitMono)](https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/CommitMono.zip) 3.4.0+
 
 ### winget: fzf
 
