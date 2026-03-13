@@ -4,12 +4,13 @@ local Plug = vim.fn['plug#']
 -- Vim APIs Helpers
 local globals = vim.g
 local opts = vim.opt
-local callFunc = vim.call
-local execCmd = vim.cmd
-local userCmd = vim.api.nvim_create_user_command
+local keymap = vim.api.nvim_set_keymap
+local usercmd = vim.api.nvim_create_user_command
+local callfunc = vim.call
+local callcmd = vim.cmd
 
 -- Plugins
-callFunc('plug#begin')
+callfunc('plug#begin')
 Plug('saghen/blink.cmp', { ['tag'] = 'v1.*' })
 Plug('duane9/nvim-rg')
 Plug('nvim-lualine/lualine.nvim')
@@ -22,17 +23,66 @@ Plug('MunifTanjim/nui.nvim')
 Plug('nvim-lua/plenary.nvim')
 Plug('rafamadriz/friendly-snippets')
 Plug('nvim-mini/mini.diff')
-callFunc('plug#end')
+callfunc('plug#end')
 
--- Alias Commands
-userCmd('ReloadConfig', 'source $MYVIMRC', {})
-userCmd('Q', 'quitall', {})
+-- Alias commands
+usercmd('ReloadConfig', 'source $MYVIMRC', {})
+usercmd('Q', 'quitall', {})
+usercmd('SS', 'set guifont=CommitMono\\ Nerd\\ Font:h12',{})
+usercmd('SD', 'set guifont=CommitMono\\ Nerd\\ Font:h14',{})
+usercmd('SE', 'set guifont=CommitMono\\ Nerd\\ Font:h16',{})
 
--- Neovim Options
+-- Override built-in commands
+vim.cmd([[cnoremap q BufferClose]])
+vim.cmd([[cnoremap !q BufferClose!]])
+
+-- Keymap configuration
+keymap('n', 'f', '<C-w>h', {noremap = true, silent = true})
+keymap('n', '<C-s>', '<Cmd>w<CR>', {noremap = true, silent = true})
+keymap('n', '.', '<C-w><', {noremap = false, silent = true})
+keymap('n', ',', '<C-w>>', {noremap = false, silent = true})
+keymap('n', '<A-,>', '<Cmd>BufferPrevious<CR>', {noremap = true, silent = true})
+keymap('n', '<A-.>', '<Cmd>BufferNext<CR>', {noremap = true, silent = true})
+keymap('n', '<A-<>', '<Cmd>BufferMovePrevious<CR>', {noremap = true, silent = true})
+keymap('n', '<A->>', '<Cmd>BufferMoveNext<CR>', {noremap = true, silent = true})
+keymap('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', {noremap = true, silent = true})
+keymap('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', {noremap = true, silent = true})
+keymap('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', {noremap = true, silent = true})
+keymap('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', {noremap = true, silent = true})
+keymap('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', {noremap = true, silent = true})
+keymap('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', {noremap = true, silent = true})
+keymap('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', {noremap = true, silent = true})
+keymap('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', {noremap = true, silent = true})
+keymap('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', {noremap = true, silent = true})
+keymap('n', '<A-0>', '<Cmd>BufferLast<CR>', {noremap = true, silent = true})
+keymap('n', '<A-p>', '<Cmd>BufferPin<CR>', {noremap = true, silent = true})
+keymap('n', '<A-c>', '<Cmd>BufferClose<CR>', {noremap = true, silent = true})
+keymap('n', '<C-p>',   '<Cmd>BufferPick<CR>', {noremap = true, silent = true})
+keymap('n', '<C-s-p>', '<Cmd>BufferPickDelete<CR>', {noremap = true, silent = true})
+keymap('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', {noremap = true, silent = true})
+keymap('n', '<Space>bn', '<Cmd>BufferOrderByName<CR>', {noremap = true, silent = true})
+keymap('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', {noremap = true, silent = true})
+keymap('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', {noremap = true, silent = true})
+keymap('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', {noremap = true, silent = true})
+
+-- Neovim options
+globals.clipboard = {
+	name = 'win32yank',
+	copy = {
+		['+'] = 'win32yank -i --crlf',
+		['*'] = 'win32yank -i --crlf',
+	},
+	paste = {
+		['+'] = 'win32yank -o --lf',
+		['*'] = 'win32yank -o --lf',
+	},
+	cache_enabled = 0,
+}
+opts.clipboard = 'unnamedplus'
 opts.cmdheight = 0
 opts.number = true
 
--- Neovide-related Configuration
+-- Neovide-related options
 if globals.neovide then
 	globals.neovide_opacity = 0.8
 	globals.neovide_normal_opacity = 1
@@ -45,7 +95,7 @@ if globals.neovide then
 	globals.neovide_theme = 'dark'
 end
 
--- Plugins Configuration
+-- Plugins configuration
 require('lualine').setup({
 	options = {
 		globalstatus = true,
@@ -62,6 +112,12 @@ require('neo-tree').setup({
 		winbar = false,
 		statusline = false,
 	},
+})
+require('barbar').setup({
+	animate = false,
+	sidebar_filetypes = {
+		['neo-tree'] = {event = 'BufWipeout'},
+	}
 })
 require('blink.cmp').setup({
   keymap = {
@@ -89,7 +145,6 @@ globals.neominimap = {
 require('mini.diff').setup()
 require('lualine').refresh()
 
--- Apply colorscheme
-execCmd("colorscheme kanagawa")
-
-
+-- Apply colorscheme and font size
+callcmd("colorscheme kanagawa")
+callcmd("SD")
